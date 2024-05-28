@@ -3,59 +3,48 @@ package rsa_encryption;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+/**
+ * Class to manage decrypted/encrypted files (or just text).
+ */
 public class CryptoFileString {
 
     /**
      * An absolute path to the file containing the text
      */
-    private String filepath;
+    private String filepath = "";
 
     /**
      * An instance of the key pair to be used to encrypt/decrypt
      */
     private KeyPair keyPair;
 
-    public CryptoFileString(String filepath, KeyPair keyPair) {
-        this.filepath = filepath;
+    /**
+     * The content of the file
+     */
+    private String content = "";
+
+    public CryptoFileString(KeyPair keyPair) {
         this.keyPair = keyPair;
     }
 
     /**
-     * A second constructor to initialize the file with a certain content String.
-     * 
-     * @param filepath Path to the new file.
-     * @param keyPair The keypair to be used
-     * @param content The content of the new file.
-     * @throws FileAlreadyExistsException 
+     * Getter for the filepath
+     * @return filepath
      */
-    public CryptoFileString(String filepath, KeyPair keyPair, String content) throws FileAlreadyExistsException {
+    public String getFilepath() {
+        return filepath;
+    }
+
+    /**
+     * Setter for the filepath
+     * @param filepath
+     */
+    public void setFilepath(String filepath) {
         this.filepath = filepath;
-        this.keyPair = keyPair;
-
-        File file = new File(this.filepath);
-
-        // Create new file if it doesnt exist yet
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            throw new FileAlreadyExistsException("Die angegebene Datei '" + filepath + "' existiert bereits.");
-        }
-
-        // Try writing content to the file
-        try (FileWriter fileWriter = new FileWriter(file)) {
-            fileWriter.write(content);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -75,11 +64,15 @@ public class CryptoFileString {
     }
 
     /**
-     * Gets the content of the file as a String.
+     * Gets the content of the file as a String. If no filepath was set just return the {@code content} attribute
      * @return content of the file
      */
-    @Override
-    public String toString() {
+    public String getContent() {
+        // If no file was set just return content
+        if (this.filepath.length() == 0) {
+            return this.content;
+        }
+
         StringBuilder content = new StringBuilder();
 
         try {
@@ -97,12 +90,70 @@ public class CryptoFileString {
 
             bufferedReader.close();
             fileReader.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("Die angegebene Datei '" + filepath + "' existiert nicht.");
+        } catch (FileNotFoundException e) { // Just returned cached content if the file doesn't exist
+            return this.content;
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return content.toString();
+        this.content = content.toString();
+
+        return this.content;
+    }
+
+    /**
+     * Update the files content. If no filepath was set just update the {@code content} attribute.
+     * 
+     * @param content
+     */
+    public void setContent(String content) {
+        this.content = content;
+
+        // Do not try to save the file if no filepath was specified
+        if (this.filepath.length() == 0) {
+            return;
+        }
+
+        File file = new File(this.filepath);
+
+        // Create new file if it doesnt exist yet
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Try writing content to the file
+        try (FileWriter fileWriter = new FileWriter(file)) {
+            fileWriter.write(this.content);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Transform the content using a certain key with the RSA algorithm.
+     * 
+     * @param key public or private key
+     * @return new file instance with transformed content
+     */
+    public CryptoFileString transform(Key key) {
+        String content = this.getContent();
+        String transformContent = "";
+
+        int e = key.getKey();
+        int g = key.getGeneratorNumber();
+        // transform every single character
+        for(int i=0;i<content.length();i++) {
+            int k = Character.getNumericValue(content.charAt(i));
+            transformContent += (char)(Math.pow(k, e) % g);
+        }
+
+        CryptoFileString transformFile = new CryptoFileString(this.getKeyPair());
+        transformFile.setContent(transformContent);
+
+        return transformFile;
     }
 }
