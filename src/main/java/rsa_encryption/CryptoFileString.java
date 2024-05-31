@@ -3,6 +3,7 @@ package rsa_encryption;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -120,13 +121,13 @@ public class CryptoFileString {
         String content = this.getContent();
         String transformContent = "";
 
-        int e = key.getKey();
-        int g = key.getGeneratorNumber();
+        BigInteger e = BigInteger.valueOf(key.getKey());
+        BigInteger g = BigInteger.valueOf(key.getGeneratorNumber());
         // transform every single character
         for(int i=0;i<content.length();i++) {
             char ch = content.charAt(i);
-            int k = ch + 0; // little hack to get numeric value
-            transformContent += (char)(Math.pow(k, e) % g);
+            BigInteger k = BigInteger.valueOf(ch);
+            transformContent += (char)k.modPow(e, g).intValue();
         }
 
         CryptoFileString transformFile = new CryptoFileString();
