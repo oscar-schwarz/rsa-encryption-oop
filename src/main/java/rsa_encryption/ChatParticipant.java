@@ -37,7 +37,7 @@ public class ChatParticipant {
         );
         this.consoleLog(
             "Verschluesselung mit Public Key von " + this.chatPartner.getName(),
-            this.chatPartner.getPublicKey().toString()
+            Integer.toString(this.chatPartner.getPublicKey().getKey())
         );
 
         CryptoFileString encrypted = messageFileString.transform(this.chatPartner.getPublicKey());
@@ -55,7 +55,7 @@ public class ChatParticipant {
 
         this.consoleLog(
             "Entschluesselung mit eigenem Private Key", 
-            this.keyPair.getPrivateKey().toString()
+            Integer.toString(this.keyPair.getPrivateKey().getKey())
         );
 
         CryptoFileString decrypted = encryptedFileString.transform(this.keyPair.getPrivateKey());
