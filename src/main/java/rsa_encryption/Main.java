@@ -7,7 +7,7 @@ public class Main
         KeyGenerator generatorA = new KeyGenerator(11, 17);
         generatorA.generateKeys();
 
-        KeyGenerator generatorB = new KeyGenerator(98963, 49927);
+        KeyGenerator generatorB = new KeyGenerator(23, 7);
         generatorB.generateKeys();
 
         ChatParticipant alice = new ChatParticipant("Alice", generatorA.getKeyPair());
@@ -24,6 +24,8 @@ public class Main
         CryptoFileString tragedy = new CryptoFileString();
         tragedy.setFilepath("text/tragedy.txt");
 
+        alice.sendMessage(gedicht);
         bob.sendMessage(hallowelt);
+        bob.sendMessage(tragedy);
     }
 }
