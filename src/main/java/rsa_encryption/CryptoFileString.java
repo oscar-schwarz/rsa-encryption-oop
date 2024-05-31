@@ -18,18 +18,11 @@ public class CryptoFileString {
     private String filepath = "";
 
     /**
-     * An instance of the key pair to be used to encrypt/decrypt
-     */
-    private KeyPair keyPair;
-
-    /**
      * The content of the file
      */
     private String content = "";
 
-    public CryptoFileString(KeyPair keyPair) {
-        this.keyPair = keyPair;
-    }
+    public CryptoFileString() {}
 
     /**
      * Getter for the filepath
@@ -45,22 +38,6 @@ public class CryptoFileString {
      */
     public void setFilepath(String filepath) {
         this.filepath = filepath;
-    }
-
-    /**
-     * Setter for the key pair instance.
-     * @param keyPair
-     */
-    public void setKeyPair(KeyPair keyPair) {
-        this.keyPair = keyPair;
-    }
-
-    /**
-     * Getter for the key pair instance
-     * @return the key pair
-     */
-    public KeyPair getKeyPair() {
-        return keyPair;
     }
 
     /**
@@ -147,13 +124,22 @@ public class CryptoFileString {
         int g = key.getGeneratorNumber();
         // transform every single character
         for(int i=0;i<content.length();i++) {
-            int k = Character.getNumericValue(content.charAt(i));
+            char ch = content.charAt(i);
+            int k = ch + 0; // little hack to get numeric value
             transformContent += (char)(Math.pow(k, e) % g);
         }
 
-        CryptoFileString transformFile = new CryptoFileString(this.getKeyPair());
+        CryptoFileString transformFile = new CryptoFileString();
         transformFile.setContent(transformContent);
 
         return transformFile;
+    }
+
+    /**
+     * Alias for {@code getContent} for comfort.
+     */
+    @Override
+    public String toString() {
+        return this.getContent();
     }
 }
