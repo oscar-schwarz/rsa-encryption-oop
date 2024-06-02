@@ -2,6 +2,13 @@ package rsa_encryption;
 
 import java.math.BigInteger;
 
+/**
+ * The {@code PublicKey} class implements the {@code Key} interface and represents
+ * an RSA public key.
+ *
+ * @version 1.0
+ * @since 2023
+ */
 public class PublicKey implements Key{
 
     private BigInteger p;
@@ -10,6 +17,12 @@ public class PublicKey implements Key{
     private BigInteger generatorKey;
 
 
+    /**
+     * Constructs a {@code PublicKey} with specified prime numbers {@code p} and {@code q}.
+     *
+     * @param p the first prime number.
+     * @param q the second prime number.
+     */
     public PublicKey(
             BigInteger p,
             BigInteger q) {
@@ -17,11 +30,15 @@ public class PublicKey implements Key{
         this.q = q;
         generatorKey = this.p.multiply(this.q);
     }
+
     private BigInteger ggt(BigInteger a, BigInteger b) {
         if (b.signum() == 0) return a;
         return ggt(b,a.mod(b));
     }
 
+    /**
+     * Generates the RSA public key.
+     */
     public void generateKey() {
         BigInteger f = (p.subtract(BigInteger.valueOf(1))).multiply(q.subtract(BigInteger.valueOf(1)));
 
@@ -33,11 +50,20 @@ public class PublicKey implements Key{
         this.keyNumber = e;
     }
 
+    /**
+     * Retrieves the generator number associated with the key.
+     *
+     * @return the generator number as a {@code BigInteger}.
+     */
     public BigInteger getGeneratorNumber() {
         return generatorKey;
     }
 
-    @Override
+    /**
+     * Retrieves the generated cryptographic key.
+     *
+     * @return the cryptographic key as a {@code BigInteger}.
+     */
     public BigInteger getKey() {
         return keyNumber;
     }
