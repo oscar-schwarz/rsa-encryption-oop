@@ -15,7 +15,11 @@ public class KeyGenerator {
      * @param q the second prime number.
      */
     public KeyGenerator(BigInteger p, BigInteger q) {
-        keys = new KeyPair(p, q);
+        if (p.isProbablePrime(100) && q.isProbablePrime(100)) {
+            keys = new KeyPair(p, q);
+        } else {
+            throw new IllegalArgumentException("Keine Primzahl!");
+        }
     }
 
     /**
@@ -25,7 +29,12 @@ public class KeyGenerator {
      * @param q the second prime number.
      */
     public KeyGenerator(int p, int q) {
-        keys = new KeyPair(BigInteger.valueOf(p), BigInteger.valueOf(q));
+        if (BigInteger.valueOf(p).isProbablePrime(100) && BigInteger.valueOf(q).isProbablePrime(100)) {
+            keys = new KeyPair(BigInteger.valueOf(p), BigInteger.valueOf(q));
+        } else {
+            throw new IllegalArgumentException("Keine Primzahl!");
+        }
+
     }
 
     /**

@@ -23,9 +23,13 @@ public class PrivateKey implements Key{
     public PrivateKey(
             BigInteger p,
             BigInteger q) {
-        this.p = p;
-        this.q = q;
-        generatorKey = this.p.multiply(this.q);
+        if (p.isProbablePrime(100) && q.isProbablePrime(100)) {
+            this.p = p;
+            this.q = q;
+            generatorKey = this.p.multiply(this.q);
+        } else {
+            throw new IllegalArgumentException("Keine Primzahl!");
+        }
     }
 
     private BigInteger ggt(BigInteger a, BigInteger b) {

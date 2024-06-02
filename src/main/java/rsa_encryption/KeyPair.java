@@ -16,8 +16,12 @@ public class KeyPair {
      * @param q the second prime number.
      */
     public KeyPair(BigInteger p, BigInteger q){
-        publicKey = new PublicKey(p,q);
-        privateKey = new PrivateKey(p,q);
+        if (p.isProbablePrime(100) && q.isProbablePrime(100)) {
+            publicKey = new PublicKey(p, q);
+            privateKey = new PrivateKey(p, q);
+        } else {
+            throw new IllegalArgumentException("Keine Primzahl");
+        }
     }
     /**
      * Generates the private key.
