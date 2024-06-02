@@ -1,10 +1,12 @@
 package rsa_encryption;
 
+import java.math.BigInteger;
+
 public interface Key {
 
     public void generateKey();
-    public int getKey();
-    public int getGeneratorNumber();
+    public BigInteger getKey();
+    public BigInteger getGeneratorNumber();
 
 
 }

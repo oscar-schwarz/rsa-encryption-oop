@@ -1,10 +1,12 @@
 package rsa_encryption;
 
+import java.math.BigInteger;
+
 public class KeyPair {
     private PublicKey publicKey;
     private PrivateKey privateKey;
 
-    public KeyPair(int p, int q){
+    public KeyPair(BigInteger p, BigInteger q){
         publicKey = new PublicKey(p,q);
         privateKey = new PrivateKey(p,q);
     }

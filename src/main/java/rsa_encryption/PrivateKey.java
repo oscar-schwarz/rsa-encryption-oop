@@ -1,47 +1,49 @@
 package rsa_encryption;
 
+import java.math.BigInteger;
+
 public class PrivateKey implements Key{
 
-    private int p;
-    private int q;
-    private int keyNumber;
-    private int generatorKey;
+    private BigInteger p;
+    private BigInteger q;
+    private BigInteger keyNumber;
+    private BigInteger generatorKey;
 
 
     public PrivateKey(
-            int p,
-            int q) {
+            BigInteger p,
+            BigInteger q) {
         this.p = p;
         this.q = q;
-        generatorKey = this.p * this.q;
+        generatorKey = this.p.multiply(this.q);
     }
-    private int ggt(int a, int b) {
-        if (b==0) return a;
-        return ggt(b,a%b);
+    private BigInteger ggt(BigInteger a, BigInteger b) {
+        if (b.signum() == 0) return a;
+        return ggt(b,a.mod(b));
     }
 
     public void generateKey() {
-        int f = (p - 1) * (q - 1);
+        BigInteger f = (p.subtract(BigInteger.valueOf(1))).multiply(q.subtract(BigInteger.valueOf(1)));
 
-        int e = 2;
-        while (ggt(e, f) != 1) {
-            e++;
+        BigInteger e = BigInteger.valueOf(2);
+        while (!(ggt(e, f).equals(BigInteger.valueOf(1)))) {
+            e = e.add(BigInteger.valueOf(1));
         }
-        int d = 1;
-        while ((d*e) % f != 1){
-            d++;
+        BigInteger d = BigInteger.valueOf(1);
+        while (!((d.multiply(e)).mod(f).equals(BigInteger.valueOf(1)))){
+            d = d.add(BigInteger.valueOf(1));
         }
 
         this.keyNumber = d;
     }
 
 
-    public int getGeneratorNumber() {
+    public BigInteger getGeneratorNumber() {
         return generatorKey;
     }
 
     @Override
-    public int getKey() {
+    public BigInteger getKey() {
         return keyNumber;
     }
 }
