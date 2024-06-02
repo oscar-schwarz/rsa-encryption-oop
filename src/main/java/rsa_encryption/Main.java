@@ -4,10 +4,10 @@ public class Main
 {
     public static void main( String[] args )
     {
-        KeyGenerator generatorA = new KeyGenerator(11, 17);
+        KeyGenerator generatorA = new KeyGenerator(479, 839);
         generatorA.generateKeys();
 
-        KeyGenerator generatorB = new KeyGenerator(23, 7);
+        KeyGenerator generatorB = new KeyGenerator(547, 919);
         generatorB.generateKeys();
 
         ChatParticipant alice = new ChatParticipant("Alice", generatorA.getKeyPair());
