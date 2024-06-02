@@ -121,8 +121,8 @@ public class CryptoFileString {
         String content = this.getContent();
         String transformContent = "";
 
-        BigInteger e = BigInteger.valueOf(key.getKey());
-        BigInteger g = BigInteger.valueOf(key.getGeneratorNumber());
+        BigInteger e = key.getKey();
+        BigInteger g = key.getGeneratorNumber();
         // transform every single character
         for(int i=0;i<content.length();i++) {
             char ch = content.charAt(i);
