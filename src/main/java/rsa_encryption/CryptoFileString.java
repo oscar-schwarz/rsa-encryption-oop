@@ -123,12 +123,24 @@ public class CryptoFileString {
 
         BigInteger e = key.getKey();
         BigInteger g = key.getGeneratorNumber();
-        // transform every single character
-        for(int i=0;i<content.length();i++) {
-            char ch = content.charAt(i);
-            BigInteger k = BigInteger.valueOf(ch);
-            transformContent += (char)k.modPow(e, g).intValue();
+        int gLength = g.toString().length();
+        // encrypt
+        if (key instanceof PublicKey) {
+            for(int i=0;i<content.length();i++) {
+                char ch = content.charAt(i);
+                int code = (int)ch;
+                BigInteger k = BigInteger.valueOf(code);
+                transformContent += String.format("%0" + gLength + "d", k.modPow(e, g).intValue());
+            }
         }
+        // decrypt
+        else {
+            for (int i=0;i<content.length();i += gLength) {
+                BigInteger v = BigInteger.valueOf(Integer.parseInt(content.substring(i,i+gLength)));
+                transformContent += (char)v.modPow(e, g).intValue();
+            }
+        }
+
 
         CryptoFileString transformFile = new CryptoFileString();
         transformFile.setContent(transformContent);
