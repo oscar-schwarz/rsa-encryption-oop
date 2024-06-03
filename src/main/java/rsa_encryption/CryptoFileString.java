@@ -128,8 +128,7 @@ public class CryptoFileString {
         if (key instanceof PublicKey) {
             for(int i=0;i<content.length();i++) {
                 char ch = content.charAt(i);
-                int code = (int)ch;
-                BigInteger k = BigInteger.valueOf(code);
+                BigInteger k = BigInteger.valueOf(ch);
                 transformContent += String.format("%0" + gLength + "d", k.modPow(e, g).intValue());
             }
         }
